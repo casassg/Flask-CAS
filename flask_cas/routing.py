@@ -35,7 +35,7 @@ def login():
     redirect_url = create_cas_login_url(
         current_app.config['CAS_SERVER'],
         current_app.config['CAS_LOGIN_ROUTE'],
-        flask.url_for('.login', _external=True))
+        current_app.config['CAS_SERVICE'] or flask.url_for('.login', _external=True))
 
     if 'ticket' in flask.request.args:
         flask.session[cas_token_session_key] = flask.request.args['ticket']
@@ -102,7 +102,7 @@ def validate(ticket):
     cas_validate_url = create_cas_validate_url(
         current_app.config['CAS_SERVER'],
         current_app.config['CAS_VALIDATE_ROUTE'],
-        flask.url_for('.login', _external=True),
+        current_app.config['CAS_SERVICE'] or flask.url_for('.login', _external=True),
         ticket)
 
     current_app.logger.debug("Making GET request to {0}".format(
